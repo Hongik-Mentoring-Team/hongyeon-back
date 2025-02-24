@@ -40,6 +40,7 @@ import java.util.Set;
 @Getter
 @Entity
 public class Member {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)     //참고(sequence, table전략은 JPA에서 ID를 미리 할당받기에 쿼리를 지연 가능, 반면 identity는 즉시 쿼리 발생)
     @Column(name = "member_id")
     private Long id;    //DB용 PK
@@ -149,7 +150,6 @@ public class Member {
 
     public void setMainBadgeUrl(String url) {
         this.mainBadgeUrl=url;
-
     }
 
     public void addFollower(Follow follower) {
