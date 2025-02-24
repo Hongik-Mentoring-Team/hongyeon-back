@@ -19,7 +19,4 @@ public class ChatRoomDto {
         this.name = name;
     }
 
-    public ChatRoom toEntity() {
-        return new ChatRoom(name);
-    }
 }

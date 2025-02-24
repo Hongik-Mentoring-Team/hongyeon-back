@@ -66,7 +66,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "followee", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Follow> followings = new HashSet<>();
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -77,7 +77,10 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberBadge> badges = new ArrayList<>();
+
     private String mainBadgeUrl;
+
+    private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     private Tier tier;
@@ -109,6 +112,8 @@ public class Member {
         } else {
             this.type=MemberType.STUDENT;
         }*/
+        this.mainBadgeUrl = "";
+        this.imageUrl = "";
         this.type = MemberType.TEMP;
         this.accountStatus = AccountStatus.ACTIVE;
         this.role = Role.USER;
@@ -149,6 +154,7 @@ public class Member {
     }
 
     public void setMainBadgeUrl(String url) {
+        this.mainBadgeUrl = url;
         this.mainBadgeUrl=url;
     }
 

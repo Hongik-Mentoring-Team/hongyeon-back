@@ -1,16 +1,11 @@
 package com.hongik.mentor.hongik_mentor.repository;
 
-import com.hongik.mentor.hongik_mentor.controller.dto.MemberResponseDto;
 import com.hongik.mentor.hongik_mentor.domain.Member;
-import com.hongik.mentor.hongik_mentor.domain.MemberType;
 import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.NonUniqueResultException;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +49,7 @@ public class MemberRepository {
                 .setParameter("socialId", socialId)
                 .setParameter("socialProvider",socialProvider)
                 .getResultStream().findFirst(); //조회 결과: 1명 조회 | 0명 조회
+
         return findMember;
 
     }

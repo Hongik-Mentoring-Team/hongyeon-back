@@ -11,15 +11,15 @@ import java.util.Optional;
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     // TODO : QueryDSL로 코드 변경 예정
-    @Query("select f from Follow f where f.follower.id =: followerId and f.following.id =: followingId")
+    @Query("select f from Follow f where f.follower.id =: followerId and f.followee.id =: followingId")
     Optional<Follow> findByFollowerIdWithFollowingId(@Param("followerId") Long followerId,
                                                      @Param("followingId") Long followingId);
 
     List<Follow> findByFollowerId(Long followerId);
 
-    List<Follow> findByFollowingId(Long followingId);
+    List<Follow> findByFolloweeId(Long followingId);
 
     int countByFollowerId(Long followerId);
 
-    int countByFollowingId(Long followingId);
+    int countByFolloweeId(Long followingId);
 }

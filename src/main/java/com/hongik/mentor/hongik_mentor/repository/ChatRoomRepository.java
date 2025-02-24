@@ -6,12 +6,17 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     @EntityGraph(attributePaths = {"chatMembers", "chatMessages"})  //성능최적화
     @Query("select c.chatRoom from ChatRoomMember c where c.member.id = :memberId")
     List<ChatRoom> findByMemberId(Long memberId);
+
+    @Query("select c from ChatRoom c where c.post.id = :postId")
+    Optional<ChatRoom> findByPostId(Long postId);
 }
 
 /*

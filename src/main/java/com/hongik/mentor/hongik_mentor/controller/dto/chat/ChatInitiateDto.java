@@ -10,7 +10,8 @@ import java.util.Objects;
 @Data
 public class ChatInitiateDto {
     private String roomName;    //채팅방 이름
-    private Map<Long, String> membersInfo; //memberId : nickname
+
+    private Long postId;
 
 }
 
@@ -18,10 +19,7 @@ public class ChatInitiateDto {
   /*
 {
   "roomName": "Study Group",
-  "membersInfo": {
-    "1": "John",
-    "2": "Jane"
-  }
+  "postId" : 123
 }
 
 * */

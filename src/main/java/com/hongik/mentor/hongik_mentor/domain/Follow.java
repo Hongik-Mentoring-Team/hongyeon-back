@@ -17,12 +17,12 @@ public class Follow {
     private Member follower;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id")
-    private Member following;
+    @JoinColumn(name = "followee_id")
+    private Member followee;    //from근호: following은 헷갈려서 바꿔요 ㅠ
 
     @Builder
-    public Follow(Member follower, Member following) {
+    public Follow(Member follower, Member followee) {
         this.follower = follower;
-        this.following = following;
+        this.followee = followee;
     }
 }

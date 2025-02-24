@@ -1,15 +1,16 @@
 package com.hongik.mentor.hongik_mentor.service;
 
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberSaveDto;
-import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatMessageDto;
+import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatMessageReqDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatMessageResponseDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatRoomDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatRoomResponseDto;
+import com.hongik.mentor.hongik_mentor.domain.Category;
 import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoomType;
+import com.hongik.mentor.hongik_mentor.domain.post.Post;
 import com.hongik.mentor.hongik_mentor.repository.MemberRepository;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,8 +41,18 @@ class ChatServiceTest {
         Long member1Id = memberService.save(new MemberSaveDto("1", SocialProvider.GOOGLE, "olaf", "CS", 2025));
         Long member2Id = memberService.save(new MemberSaveDto("2", SocialProvider.GOOGLE, "tryn", "EC", 2025));
 
+        //create Post
+        Post post = Post.builder()
+                .capacity(2)
+                .category(Category.MENTOR)
+                .chatRoomType(ChatRoomType.PRIVATE)
+                .content("hello bro")
+                .title("come to my mentoring")
+                .member(memberRepository.findById(member1Id).orElseThrow())
+                .build();
+
         /*when*/
-        Long roomId = chatService.saveChatRoom(new ChatRoomDto("roomA"));
+        Long roomId = chatService.createChatRoom(new ChatRoomDto("roomA"),post.getId());
         log.info("chatroom id={}", roomId);
 
         Map<Long, String> chatMembersInfo = new HashMap<>();
@@ -64,7 +75,7 @@ class ChatServiceTest {
         Long member1Id = memberService.save(new MemberSaveDto("1", SocialProvider.GOOGLE, "olaf", "CS", 2025));
         Long member2Id = memberService.save(new MemberSaveDto("2", SocialProvider.GOOGLE, "tryn", "EC", 2025));
         //Chatroom 생성 저장
-        Long roomId = chatService.saveChatRoom(new ChatRoomDto("roomA"));
+        Long roomId = chatService.createChatRoom(new ChatRoomDto("roomA"));
         //ChatMember 생성 저장
         Map<Long, String> chatMembersInfo = new HashMap<>();
         String nickname1 = "olafN";
@@ -75,7 +86,7 @@ class ChatServiceTest {
 
         /*when*/
         String content = "나의 첫 메시지다!";
-        chatService.saveChatMessage(roomId, new ChatMessageDto(roomId, nickname1, member1Id, content));
+        chatService.saveChatMessage(roomId, new ChatMessageReqDto(roomId, nickname1, member1Id, content));
 
         //then
         List<ChatMessageResponseDto> messages = chatService.findMessages(roomId);

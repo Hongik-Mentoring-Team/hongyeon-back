@@ -1,12 +1,10 @@
 package com.hongik.mentor.hongik_mentor.oauth;
 
-import com.hongik.mentor.hongik_mentor.controller.dto.MemberResponseDto;
 import com.hongik.mentor.hongik_mentor.domain.Member;
 import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
 import com.hongik.mentor.hongik_mentor.oauth.dto.OAuthAttributes;
 import com.hongik.mentor.hongik_mentor.oauth.dto.SessionMember;
 import com.hongik.mentor.hongik_mentor.repository.MemberRepository;
-import com.hongik.mentor.hongik_mentor.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +46,7 @@ public class CustomOAuth2UserService implements OAuth2UserService {
         Member member = saveOrUpdate(oAuthAttributes, userNameAttributeName);
     //2.
         //httpSession에 저장
-        httpSession.setAttribute("sessionMember", new SessionMember(member));
+        httpSession.setAttribute("sessionMember", new SessionMember(member,(String)oAuthAttributes.getAttributes().get("name")));
 
     //3.
         //Session(또는 Spring Context)에 Principal저장

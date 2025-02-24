@@ -9,17 +9,11 @@ import com.hongik.mentor.hongik_mentor.exception.CustomMentorException;
 import com.hongik.mentor.hongik_mentor.exception.ErrorCode;
 import com.hongik.mentor.hongik_mentor.repository.FollowRepository;
 import com.hongik.mentor.hongik_mentor.repository.MemberRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -86,7 +80,10 @@ public class FollowServiceTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
 
-        Follow follow = createFollow(member1, member2);
+        Follow follow = Follow.builder()
+                .follower(member1)
+                .following(member2)
+                .build();
 
         Follow savedFollow = followRepository.save(follow);
 
@@ -100,10 +97,10 @@ public class FollowServiceTest {
 //                .hasMessage("해당유저를 팔로우했던 결과가 존재하지 않습니다.");
      }
 
-     @DisplayName("한 사람을 팔로우하고 있는 사람의 수와 내역들을 모두 조회한다. 즉 팔로우 내역 조회")
+     @DisplayName("한 사람이 팔로우하고 있는 내역을 모두 조회한다. 즉 팔로잉 내역 조회")
      @Test
      @Transactional
-     void getFollowerStatus(){
+     void test(){
 
          //given
          Member member1 = new Member("1111", SocialProvider.GOOGLE, "박승범", "컴퓨터공학과", 2025);
@@ -162,9 +159,9 @@ public class FollowServiceTest {
 
 
         //when
-        int numOfFollowers = followRepository.countByFollowingId(member1.getId());
+        int numOfFollowers = followRepository.countByFolloweeId(member1.getId());
 
-        List<Follow> followers = followRepository.findByFollowingId(member1.getId());
+        List<Follow> followers = followRepository.findByFolloweeId(member1.getId());
 
         //then
         assertThat(numOfFollowers).isEqualTo(2);

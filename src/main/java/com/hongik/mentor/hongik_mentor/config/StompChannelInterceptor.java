@@ -1,14 +1,14 @@
 package com.hongik.mentor.hongik_mentor.config;
 
 import com.hongik.mentor.hongik_mentor.constant.ConstantUri;
-import com.hongik.mentor.hongik_mentor.controller.dto.MemberResponseDto;
-import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatMessageDto;
+import com.hongik.mentor.hongik_mentor.controller.dto.MemberAdminDto;
+import com.hongik.mentor.hongik_mentor.controller.dto.MemberResDto;
+import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatMessageReqDto;
 import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
 import com.hongik.mentor.hongik_mentor.exception.ErrorCode;
 import com.hongik.mentor.hongik_mentor.exception.SendMessageException;
 import com.hongik.mentor.hongik_mentor.service.ChatService;
 import com.hongik.mentor.hongik_mentor.service.MemberService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -20,8 +20,9 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -44,14 +45,22 @@ public class StompChannelInterceptor implements ChannelInterceptor {
         this.memberService = memberService;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);   //WebSocket 메시지 헤더 접근
         Principal principal = accessor.getUser();
+
+
         /** 메시지 인증 인가
          * */
         //사용자 인증 검증: 웹소켓세션에 인증정보 없음
         if(principal == null) throw new SendMessageException(ErrorCode.WEB_SOCKET_AUTHENTICATION_NOT_EXISTS);
+
+        //STOMP의 CONNECT 시점에 memberId를 웹소켓 세션에 저장
+        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            saveMemberIdToWebsocketSession((OAuth2AuthenticationToken) principal, accessor);
+        }
 
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
             String destination = accessor.getDestination();
@@ -59,7 +68,7 @@ public class StompChannelInterceptor implements ChannelInterceptor {
             String username = principal != null ? principal.getName() : "Unknown";
 
             // 구독 요청 검증 로직 추가
-            if (isSubscriptionAllowed(destination, principal)) {
+            if (isSubscriptionAllowed(destination, accessor)) {
                 log.info("User {} with SessionId {} is allowed to subscribe to {}", username, sessionId, destination);
                 // 구독 허용
             } else {
@@ -94,10 +103,11 @@ public class StompChannelInterceptor implements ChannelInterceptor {
      * 구독 요청이 허용되는지 여부를 검증하는 메서드
      *
      * @param destination 구독 목적지
-     * @param principal   사용자 인증정보
+     * @param headerAccessor   사용자 인증정보(-> 안에 principal을 가짐)
      * @return 허용 여부
      */
-    private boolean isSubscriptionAllowed(String destination, Principal principal) {
+    private boolean isSubscriptionAllowed(String destination, StompHeaderAccessor headerAccessor) {
+        Principal principal = headerAccessor.getUser();
 //        log.info("isSubscriptionAllowed -- pricipal형식: {}", principal);
         if (destination == null || !destination.startsWith(ConstantUri.SUBSCRIBE_PREFIX)) return false;
 
@@ -112,7 +122,8 @@ public class StompChannelInterceptor implements ChannelInterceptor {
         String socialId = authentication.getPrincipal().getName();
         SocialProvider socialProvider = SocialProvider.from((String) authentication.getPrincipal().getAttributes().get("socialProvider") );
 
-        boolean isInChatroom = isInChatroom(destination, socialId, socialProvider);
+        Long memberId = (Long) headerAccessor.getSessionAttributes().get("memberId");
+        boolean isInChatroom = isInChatroom(destination, memberId);
         if(!isInChatroom) return false;
 
         return true;
@@ -136,7 +147,7 @@ public class StompChannelInterceptor implements ChannelInterceptor {
             //채팅방 멤버 검증
         String socialId = authentication.getPrincipal().getName();
         SocialProvider socialProvider = SocialProvider.from((String) authentication.getPrincipal().getAttributes().get("socialProvider") );
-        ChatMessageDto messageDto = (ChatMessageDto) messageConverter.fromMessage(message, ChatMessageDto.class);
+        ChatMessageReqDto messageDto = (ChatMessageReqDto) messageConverter.fromMessage(message, ChatMessageReqDto.class);
 
         if(!isInChatroom(messageDto, socialId, socialProvider)) return false;
 
@@ -150,19 +161,30 @@ public class StompChannelInterceptor implements ChannelInterceptor {
      * @param socialProvider 구글,네이버..
      *
      * */
-    private boolean isInChatroom(String destination, String socialId, SocialProvider socialProvider) {
-        MemberResponseDto dto = memberService.findBySocialId(socialId, socialProvider).orElseThrow();
-
+    private boolean isInChatroom(String destination, Long memberId) {
         Long chatRoomId = Long.parseLong(destination.substring(ConstantUri.SUBSCRIBE_PREFIX.length()));
-        boolean isInChatroom = chatService.findChatRoomByMemberId(dto.getId())
+        boolean isInChatroom = chatService.findChatRoomByMemberId(memberId)
                 .stream().anyMatch(chatRoomResponseDto -> chatRoomResponseDto.getId().equals(chatRoomId));
+
         return isInChatroom;
     }
-    private boolean isInChatroom(ChatMessageDto messageDto, String socialId, SocialProvider socialProvider) {
-        MemberResponseDto dto = memberService.findBySocialId(socialId, socialProvider).orElseThrow();
+    private boolean isInChatroom(ChatMessageReqDto messageDto, String socialId, SocialProvider socialProvider) {
+        MemberAdminDto dto = memberService.findBySocialId(socialId, socialProvider).orElseThrow();
         Long chatRoomId = messageDto.getChatRoomId();
         boolean isInChatroom = chatService.findChatRoomByMemberId(dto.getId())
                 .stream().anyMatch(chatRoomResponseDto -> chatRoomResponseDto.getId().equals(chatRoomId));
         return isInChatroom;
     }
+
+
+    //기능: CONNECT 시점에 한번만 작동하며, 현재 참가중인 사용자의 memberId를 웹소켓세션에 저장
+    private void saveMemberIdToWebsocketSession(OAuth2AuthenticationToken principal, StompHeaderAccessor accessor) {
+        OAuth2User oAuth2User = principal.getPrincipal();
+        String socialId = oAuth2User.getName();
+        SocialProvider socialProvider = SocialProvider.from((String) oAuth2User.getAttributes().get("socialProvider"));
+        Long currentUserId = memberService.getMemberIdOnllyForAdmin(socialId, socialProvider);
+        accessor.getSessionAttributes().put("memberId", currentUserId);
+        log.info("현재 로그인한 사용자의 memberID를 웹소켓세션에 저장하였습니다. 아이디: {}", currentUserId);
+    }
+
 }

@@ -17,7 +17,17 @@ public class MentoringExceptionHandler {
         return ErrorResponseEntity.errorResponseEntity(e.getErrorCode());
     }
     @ExceptionHandler(InitiateChatException.class)
-    public ResponseEntity<ErrorResponseEntity> handleInitiateChatException(InitiateChatException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponseEntity> handleInitiateChatException(InitiateChatException e) {
+        return ErrorResponseEntity.errorResponseEntity(e.getErrorCode());
+    }
+
+    @ExceptionHandler(RegisterMemberException.class)
+    public ResponseEntity<ErrorResponseEntity> handleRegisterMemberException(RegisterMemberException e) {
+        return ErrorResponseEntity.errorResponseEntity(e.getErrorCode());
+    }
+
+    @ExceptionHandler(SendMessageException.class)
+    public ResponseEntity<ErrorResponseEntity> handleSendMessageException(SendMessageException e) {
         return ErrorResponseEntity.errorResponseEntity(e.getErrorCode());
     }
 

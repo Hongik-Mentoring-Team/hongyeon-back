@@ -1,6 +1,7 @@
 package com.hongik.mentor.hongik_mentor.domain.chat;
 
 import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,23 +16,32 @@ public class ChatRoom {
     @Id @GeneratedValue
     @Column(name = "chatroom_id")
     private Long id;
+
     @OneToMany(mappedBy = "chatRoom"
             ,fetch = FetchType.EAGER
             , cascade = CascadeType.ALL, orphanRemoval = true) //ChatRoomMember 레포를 새로만들지 않고 cascade처리함
     @OrderColumn(name = "chatroommember_order") //성능 최적화
     private List<ChatRoomMember> chatMembers = new ArrayList<>();
+
     @OneToMany(mappedBy = "chatRoom"
             , fetch = FetchType.EAGER   //ChatMessage는 거의 항상 같이 조회하므로 Eager로딩
             , cascade = CascadeType.ALL, orphanRemoval = true) //ChatMessage 영속성 관리는 ChatRoom이 함
     @OrderColumn(name = "chatmessage_order")
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private ChatRoomStatus roomStatus;
+
     private String name;    //채팅방 이름
 
-    public ChatRoom(String name) {
+    @OneToOne(fetch = FetchType.LAZY) @JoinColumn(name = "post_id", unique = true, nullable = false)
+    private Post post;
+
+    public ChatRoom(String name, Post post) {
         this.name = name;
         this.roomStatus = ChatRoomStatus.OPEN;
+        this.post = post;
+        post.setChatRoom(this);
     }
 
     //양방향 연관관계 편의 메서드
