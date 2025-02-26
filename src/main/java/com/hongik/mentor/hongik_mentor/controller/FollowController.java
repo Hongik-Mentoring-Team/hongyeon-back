@@ -1,6 +1,7 @@
 package com.hongik.mentor.hongik_mentor.controller;
 
 import com.hongik.mentor.hongik_mentor.controller.dto.FollowRequestDTO;
+import com.hongik.mentor.hongik_mentor.controller.swagger.FollowControllerDocs;
 import com.hongik.mentor.hongik_mentor.service.MemberService;
 import com.hongik.mentor.hongik_mentor.service.dto.FollowStatusDto;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class FollowController {
+public class FollowController implements FollowControllerDocs {
 
     private final MemberService memberService;
 

@@ -4,6 +4,7 @@ import com.hongik.mentor.hongik_mentor.constant.ConstantUri;
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatInitiateDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatMessageReqDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatRoomResponseDto;
+import com.hongik.mentor.hongik_mentor.controller.swagger.ChatControllerDocs;
 import com.hongik.mentor.hongik_mentor.oauth.util.SessionUtil;
 import com.hongik.mentor.hongik_mentor.service.ChatService;
 import com.hongik.mentor.hongik_mentor.service.MemberService;
@@ -24,7 +25,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class ChatController {
+public class ChatController implements ChatControllerDocs {
 
     private final ChatService chatService;
     private final MemberService memberService;
@@ -56,7 +57,7 @@ public class ChatController {
 
     //채팅 메시지 내역 전달: 채팅방 url창을 새로 열때마다 호출
     @GetMapping("/api/v1/chatRoom/history/{chatRoomId}")
-    public ResponseEntity<ChatRoomResponseDto> sendMessageHistory(@PathVariable Long chatRoomId, HttpSession httpSession) {
+    public ResponseEntity<ChatRoomResponseDto> sendChatRoomHistory(@PathVariable Long chatRoomId, HttpSession httpSession) { //성능개선가능: 메시지가 너무 많아지면 문제가 되므로 페이징 처리가 필요할듯
         ChatRoomResponseDto responseDto = chatService.findChatRoom(chatRoomId, SessionUtil.getCurrentMemberId(httpSession));
         return ResponseEntity.ok()
                 .body(responseDto);

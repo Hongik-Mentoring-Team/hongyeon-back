@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "댓글과 관련된 API", description = "댓글 생성/수정/삭제를 수행하는 API")
-public class CommentController{
+public class CommentController implements CommentControllerDocs{
 
 
     private final CommentService commentService;
