@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+//Member 엔티티 PK 조회
 public class SessionUtil {
     public static Long getCurrentMemberId(HttpSession httpSession) {
         if(httpSession==null) throw new IllegalStateException("위치: SessionUtil.getCurrentMemberId");
