@@ -3,6 +3,7 @@ package com.hongik.mentor.hongik_mentor.controller;
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberRegisterDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberResDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberSaveDto;
+import com.hongik.mentor.hongik_mentor.controller.swagger.MemberControllerDocs;
 import com.hongik.mentor.hongik_mentor.oauth.LoginMember;
 import com.hongik.mentor.hongik_mentor.oauth.dto.SessionMember;
 import com.hongik.mentor.hongik_mentor.oauth.util.SessionUtil;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class MemberApiController {
+public class MemberController implements MemberControllerDocs {
     private final MemberService memberService;
 
     //소셜로그인 인증 후 서비스 회원가입
