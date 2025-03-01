@@ -1,10 +1,9 @@
 package com.hongik.mentor.hongik_mentor.repository;
 
 import com.hongik.mentor.hongik_mentor.domain.Badge;
-import com.hongik.mentor.hongik_mentor.domain.MemberBadge;
+import com.hongik.mentor.hongik_mentor.domain.member.MemberBadge;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

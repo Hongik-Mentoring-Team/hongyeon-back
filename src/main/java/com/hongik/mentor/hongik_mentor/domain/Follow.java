@@ -1,5 +1,6 @@
 package com.hongik.mentor.hongik_mentor.domain;
 
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 

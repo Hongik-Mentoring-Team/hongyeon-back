@@ -1,11 +1,9 @@
 package com.hongik.mentor.hongik_mentor.domain.chat;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
 import com.hongik.mentor.hongik_mentor.domain.post.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.core.annotation.Order;
 
 import java.util.ArrayList;
 import java.util.List;

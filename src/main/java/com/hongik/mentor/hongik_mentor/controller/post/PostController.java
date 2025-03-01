@@ -62,7 +62,8 @@ public class PostController implements PostControllerDocs {
     }
 
     @GetMapping("/posts/search")
-    public ResponseEntity<?> searchPostByTags(@RequestParam(required = false) Category category, @RequestParam(required = false) List<Long> tagIds) {
+    public ResponseEntity<?> searchPostByTags(@RequestParam(required = false) Category category,
+                                              @RequestParam(required = false) List<Long> tagIds) {
         if (category == null && tagIds == null)return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("잘못된 요청");
 
         List<PostDTO> postDTOS = postService.searchPostsByTags(category, tagIds);

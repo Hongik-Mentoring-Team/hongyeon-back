@@ -1,7 +1,5 @@
 package com.hongik.mentor.hongik_mentor.controller.dto;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import jakarta.persistence.*;
 import lombok.Data;
 
 @Data

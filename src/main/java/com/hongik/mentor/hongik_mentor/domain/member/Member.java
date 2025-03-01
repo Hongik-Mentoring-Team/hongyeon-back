@@ -1,6 +1,7 @@
-package com.hongik.mentor.hongik_mentor.domain;
+package com.hongik.mentor.hongik_mentor.domain.member;
 
 
+import com.hongik.mentor.hongik_mentor.domain.*;
 import com.hongik.mentor.hongik_mentor.domain.post.Post;
 import com.hongik.mentor.hongik_mentor.domain.tier.Tier;
 import com.hongik.mentor.hongik_mentor.domain.tier.TierAssigner;
@@ -154,7 +155,6 @@ public class Member {
     }
 
     public void setMainBadgeUrl(String url) {
-        this.mainBadgeUrl = url;
         this.mainBadgeUrl=url;
     }
 
