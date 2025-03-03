@@ -1,17 +1,14 @@
 package com.hongik.mentor.hongik_mentor.domain.post;
 
-import com.hongik.mentor.hongik_mentor.controller.dto.PostCreateDTO;
-import com.hongik.mentor.hongik_mentor.controller.dto.PostModifyDTO;
 import com.hongik.mentor.hongik_mentor.domain.Applicant;
 import com.hongik.mentor.hongik_mentor.domain.Category;
-import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoom;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoomType;
 import com.hongik.mentor.hongik_mentor.exception.CustomMentorException;
 import com.hongik.mentor.hongik_mentor.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

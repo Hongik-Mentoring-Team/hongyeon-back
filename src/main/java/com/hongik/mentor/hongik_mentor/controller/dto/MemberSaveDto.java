@@ -1,9 +1,7 @@
 package com.hongik.mentor.hongik_mentor.controller.dto;
 
-import com.hongik.mentor.hongik_mentor.domain.AccountStatus;
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import com.hongik.mentor.hongik_mentor.domain.MemberType;
-import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

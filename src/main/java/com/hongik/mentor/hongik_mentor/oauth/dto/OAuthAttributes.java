@@ -1,7 +1,7 @@
 package com.hongik.mentor.hongik_mentor.oauth.dto;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

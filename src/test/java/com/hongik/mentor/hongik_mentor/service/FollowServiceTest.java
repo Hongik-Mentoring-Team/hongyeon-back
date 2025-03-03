@@ -3,8 +3,8 @@ package com.hongik.mentor.hongik_mentor.service;
 
 import com.hongik.mentor.hongik_mentor.controller.dto.FollowRequestDTO;
 import com.hongik.mentor.hongik_mentor.domain.Follow;
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import com.hongik.mentor.hongik_mentor.exception.CustomMentorException;
 import com.hongik.mentor.hongik_mentor.exception.ErrorCode;
 import com.hongik.mentor.hongik_mentor.repository.FollowRepository;
@@ -21,6 +21,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class FollowServiceTest {
 
     @Autowired
@@ -41,7 +42,6 @@ public class FollowServiceTest {
 
     @Test
     @DisplayName("회원 팔로우에 성공한다.")
-    @Transactional
     public void follow_member_success() {
 
         //given
@@ -69,7 +69,6 @@ public class FollowServiceTest {
 
     @DisplayName("언팔로우 시 팔로우 내역은 삭제된다.")
     @Test
-    @Transactional
     void unfollowMember(){
 
         //given
@@ -82,7 +81,7 @@ public class FollowServiceTest {
 
         Follow follow = Follow.builder()
                 .follower(member1)
-                .following(member2)
+                .followee(member2)
                 .build();
 
         Follow savedFollow = followRepository.save(follow);
@@ -99,7 +98,6 @@ public class FollowServiceTest {
 
      @DisplayName("한 사람이 팔로우하고 있는 내역을 모두 조회한다. 즉 팔로잉 내역 조회")
      @Test
-     @Transactional
      void test(){
 
          //given
@@ -127,7 +125,7 @@ public class FollowServiceTest {
          //then
          assertThat(numOfFollowing).isEqualTo(2);
          assertThat(followings).hasSize(2)
-                 .extracting("following.id", "follower.id")
+                 .extracting("followee.id", "follower.id")
                  .containsExactlyInAnyOrder(
                          tuple(member2.getId(), member1.getId()),
                          tuple(member3.getId(), member1.getId())
@@ -138,7 +136,6 @@ public class FollowServiceTest {
 
      @DisplayName("한 사람이 팔로우 하고 있는 사람의 수와 팔로우하고 있는 내역들을 모두 조회한다. 즉, 팔로잉 내역 조회 ")
      @Test
-     @Transactional
      void getFollowingStatus(){
 
          //given
@@ -166,7 +163,7 @@ public class FollowServiceTest {
         //then
         assertThat(numOfFollowers).isEqualTo(2);
         assertThat(followers).hasSize(2)
-                .extracting("follower.id", "following.id")
+                .extracting("follower.id", "followee.id")
                 .containsExactlyInAnyOrder(
                         tuple(member2.getId(), member1.getId()),
                         tuple(member3.getId(), member1.getId())
@@ -177,7 +174,7 @@ public class FollowServiceTest {
     private Follow createFollow(Member follower, Member followee) {
         Follow follow = Follow.builder()
                 .follower(follower)
-                .following(followee)
+                .followee(followee)
                 .build();
         return follow;
     }

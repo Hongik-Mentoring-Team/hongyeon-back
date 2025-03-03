@@ -1,6 +1,6 @@
 package com.hongik.mentor.hongik_mentor.controller.dto.chat;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatMessage;
 import lombok.Data;
 

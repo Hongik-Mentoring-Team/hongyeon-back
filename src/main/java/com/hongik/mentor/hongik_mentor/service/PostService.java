@@ -7,10 +7,10 @@ import com.hongik.mentor.hongik_mentor.controller.dto.comment.CommentModifyDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.comment.CommentReqDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.comment.CommentResDto;
 import com.hongik.mentor.hongik_mentor.domain.*;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import com.hongik.mentor.hongik_mentor.domain.post.*;
 import com.hongik.mentor.hongik_mentor.exception.CustomMentorException;
 import com.hongik.mentor.hongik_mentor.exception.ErrorCode;
-import com.hongik.mentor.hongik_mentor.oauth.util.SessionUtil;
 import com.hongik.mentor.hongik_mentor.repository.MemberRepository;
 import com.hongik.mentor.hongik_mentor.repository.PostRepository;
 import com.hongik.mentor.hongik_mentor.repository.TagRepository;
@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -117,24 +116,15 @@ public class PostService {
 
 
     public List<PostDTO> searchPostsByTags(Category category, List<Long> tagIds) {
-        List<Post> posts=new ArrayList<>();
 
-        if (category == null) {
-            posts = postRepository.searchByTags(tagIds);
-        } else if (tagIds == null) {
-            posts = postRepository.searchByCategory(category);
-        } else {
-            posts = postRepository.searchByTagsAndCategory(tagIds, category);
-        }
+        List<Post> posts = postRepository.searchByTagsAndCategory(tagIds, category);
 
         if(posts.isEmpty()) return List.of();
 
         return posts.stream()
                 .map(PostDTO::fromPost)
                 .toList();
-
     }
-
 
     @Transactional
     public Long thumbUp(Long postId, Long memberId) { // 좋아요 기능

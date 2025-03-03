@@ -1,8 +1,8 @@
 package com.hongik.mentor.hongik_mentor.service;
 
 import com.hongik.mentor.hongik_mentor.domain.Badge;
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import com.hongik.mentor.hongik_mentor.domain.MemberBadge;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.MemberBadge;
 import com.hongik.mentor.hongik_mentor.repository.BadgeRepository;
 import com.hongik.mentor.hongik_mentor.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

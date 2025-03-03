@@ -2,9 +2,8 @@ package com.hongik.mentor.hongik_mentor.config;
 
 import com.hongik.mentor.hongik_mentor.constant.ConstantUri;
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberAdminDto;
-import com.hongik.mentor.hongik_mentor.controller.dto.MemberResDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.ChatMessageReqDto;
-import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import com.hongik.mentor.hongik_mentor.exception.ErrorCode;
 import com.hongik.mentor.hongik_mentor.exception.SendMessageException;
 import com.hongik.mentor.hongik_mentor.service.ChatService;

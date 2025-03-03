@@ -1,12 +1,6 @@
 package com.hongik.mentor.hongik_mentor.controller.dto.chat;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatMessage;
-import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoom;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 import java.time.LocalDateTime;

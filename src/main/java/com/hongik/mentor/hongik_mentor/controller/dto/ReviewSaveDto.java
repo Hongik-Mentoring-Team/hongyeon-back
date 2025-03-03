@@ -1,6 +1,6 @@
 package com.hongik.mentor.hongik_mentor.controller.dto;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import com.hongik.mentor.hongik_mentor.domain.Review;
 import lombok.Getter;
 

@@ -1,11 +1,10 @@
-package com.hongik.mentor.hongik_mentor.domain;
+package com.hongik.mentor.hongik_mentor.domain.member;
 
+import com.hongik.mentor.hongik_mentor.domain.Badge;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.annotation.processing.Generated;
 
 @NoArgsConstructor @Getter
 @Entity

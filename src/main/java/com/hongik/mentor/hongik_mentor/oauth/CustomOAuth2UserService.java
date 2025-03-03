@@ -1,7 +1,7 @@
 package com.hongik.mentor.hongik_mentor.oauth;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import com.hongik.mentor.hongik_mentor.oauth.dto.OAuthAttributes;
 import com.hongik.mentor.hongik_mentor.oauth.dto.SessionMember;
 import com.hongik.mentor.hongik_mentor.repository.MemberRepository;

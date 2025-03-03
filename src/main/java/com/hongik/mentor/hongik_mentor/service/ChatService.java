@@ -2,7 +2,7 @@ package com.hongik.mentor.hongik_mentor.service;
 
 import com.hongik.mentor.hongik_mentor.controller.dto.chat.*;
 import com.hongik.mentor.hongik_mentor.domain.Applicant;
-import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatMessage;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoom;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoomMember;
@@ -62,6 +62,7 @@ public class ChatService {
     @Transactional
     public Long createChatRoom(ChatRoomDto chatRoomDto, Long postId) {
         Optional<ChatRoom> existingRoom = chatRoomRepository.findByPostId(postId);
+
         //이미 생성된 채팅방이 있다면 반환
         if (existingRoom.isPresent()) {
             return existingRoom.orElseThrow().getId();
@@ -73,9 +74,9 @@ public class ChatService {
             ChatRoom savedChatRoom = chatRoomRepository.save(new ChatRoom(chatRoomDto.getName(), findPost));
             return savedChatRoom.getId();
         } catch (DataIntegrityViolationException e) {   //중복 생성 방지
-            Optional<ChatRoom> creatdChatRoom = chatRoomRepository.findByPostId(postId);
-            if (creatdChatRoom.isPresent()) {
-                return creatdChatRoom.get().getId();
+            Optional<ChatRoom> createdChatRoom = chatRoomRepository.findByPostId(postId);
+            if (createdChatRoom.isPresent()) {
+                return createdChatRoom.get().getId();
             } else {
                 throw e;
             }

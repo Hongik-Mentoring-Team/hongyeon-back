@@ -1,6 +1,6 @@
 package com.hongik.mentor.hongik_mentor.controller.dto;
 
-import com.hongik.mentor.hongik_mentor.domain.MemberBadge;
+import com.hongik.mentor.hongik_mentor.domain.member.MemberBadge;
 import lombok.Getter;
 
 @Getter

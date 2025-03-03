@@ -9,6 +9,9 @@ import com.hongik.mentor.hongik_mentor.domain.Category;
 import com.hongik.mentor.hongik_mentor.domain.post.Tag;
 import com.hongik.mentor.hongik_mentor.oauth.util.SessionUtil;
 import com.hongik.mentor.hongik_mentor.service.dto.PostLikeDTO;
+import com.hongik.mentor.hongik_mentor.controller.dto.PostModifyDTO;
+import com.hongik.mentor.hongik_mentor.domain.Category;
+import com.hongik.mentor.hongik_mentor.service.dto.PostLikeDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,6 +20,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -146,7 +154,5 @@ public interface PostControllerDocs {
     public ResponseEntity<?> createApplicant(@PathVariable Long postId,
                                              @RequestParam String nickname,
                                              HttpSession httpSession);
-
-
 
 }

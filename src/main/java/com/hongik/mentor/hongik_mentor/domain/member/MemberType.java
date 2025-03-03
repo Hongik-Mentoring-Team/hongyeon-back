@@ -1,4 +1,4 @@
-package com.hongik.mentor.hongik_mentor.domain;
+package com.hongik.mentor.hongik_mentor.domain.member;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,6 +1,7 @@
 package com.hongik.mentor.hongik_mentor.controller.dto.chat;
 
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoom;
+import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoomMember;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoomStatus;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class ChatRoomResponseDto {
         public ChatRoomResponseDto(ChatRoom chatRoom, Long memberId) {
                 Long currentChatMemberId = chatRoom.getChatMembers().stream()
                         .filter(chatMember -> chatMember.getMember().getId().equals(memberId))
-                        .map(chatMember -> chatMember.getId())
+                        .map(ChatRoomMember::getId)
                         .findFirst()
                         .orElse(null);
                 log.info("발견한 송신자의 chatroommemberId: {}", currentChatMemberId);

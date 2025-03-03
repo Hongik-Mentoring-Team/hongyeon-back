@@ -1,13 +1,11 @@
 package com.hongik.mentor.hongik_mentor.domain.chat;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import jakarta.annotation.Nullable;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.EnumMap;
 
 @Getter @NoArgsConstructor
 @Entity
@@ -30,6 +28,7 @@ public class ChatMessage {
         this.sender = sender;
     }
 
+    // TODO: EnableJpaAuditing 적용
     @PrePersist //em.flush직전 콜백
     public void prePersist() {
         createdAt = (createdAt == null ? LocalDateTime.now() : createdAt);
