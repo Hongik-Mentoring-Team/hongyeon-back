@@ -4,6 +4,7 @@ import com.hongik.mentor.hongik_mentor.controller.dto.MemberRegisterDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberResDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberSaveDto;
 import com.hongik.mentor.hongik_mentor.controller.swagger.MemberControllerDocs;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import com.hongik.mentor.hongik_mentor.oauth.LoginMember;
 import com.hongik.mentor.hongik_mentor.oauth.dto.SessionMember;
 import com.hongik.mentor.hongik_mentor.oauth.util.SessionUtil;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor

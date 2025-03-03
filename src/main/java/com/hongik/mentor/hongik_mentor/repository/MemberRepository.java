@@ -51,6 +51,5 @@ public class MemberRepository {
                 .getResultStream().findFirst(); //조회 결과: 1명 조회 | 0명 조회
 
         return findMember;
-
     }
 }

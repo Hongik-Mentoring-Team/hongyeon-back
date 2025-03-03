@@ -40,6 +40,13 @@ public class PostController implements PostControllerDocs {
         return ResponseEntity.status(201).body(postId);
     }
 
+    @PostMapping("/test-post/{memberId}")
+    public ResponseEntity<?> createPost(@RequestBody PostCreateDTO postCreateDTO, @PathVariable Long memberId) {
+        Long postId = postService.createPost(postCreateDTO,memberId);
+
+        return ResponseEntity.status(201).body(postId);
+    }
+
     @GetMapping("/post/{postId}")
     public ResponseEntity<?> getPost(@PathVariable Long postId, HttpSession httpSession) {
         PostDTO post = postService.getPost(postId, SessionUtil.getCurrentMemberId(httpSession));

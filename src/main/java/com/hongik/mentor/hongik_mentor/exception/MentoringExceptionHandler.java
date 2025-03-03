@@ -1,6 +1,7 @@
 package com.hongik.mentor.hongik_mentor.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 유지보수성: 예외 처리 로직을 @ControllerAdvice에서 관리해 변경이 쉽고, 중복 코드 제거.
 * */
 @RestControllerAdvice
+@Slf4j
 public class MentoringExceptionHandler {
 
     @ExceptionHandler(CustomMentorException.class)
     public ResponseEntity<ErrorResponseEntity> handleCustomMentorException(CustomMentorException e) {
+        log.info(e.getMessage());
         return ErrorResponseEntity.errorResponseEntity(e.getErrorCode());
     }
     @ExceptionHandler(InitiateChatException.class)

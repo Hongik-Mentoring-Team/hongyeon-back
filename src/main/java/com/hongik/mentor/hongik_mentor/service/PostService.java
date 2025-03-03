@@ -47,12 +47,14 @@ public class PostService {
                 .capacity(postCreateDTO.getCategory() == Category.MENTOR ? postCreateDTO.getCapacity() : 1)
                 .build();
 
-        postCreateDTO.getTagIds()
-                .forEach(id -> {
-                    Tag tag = tagRepository.findById(id).orElseThrow(() -> new RuntimeException("Tag not found"));
-                    PostTag postTag = PostTag.of(tag, post);
-                    post.addTags(postTag);
-                });
+        if(!postCreateDTO.getTagIds().isEmpty()){
+            postCreateDTO.getTagIds()
+                    .forEach(id -> {
+                        Tag tag = tagRepository.findById(id).orElseThrow(() -> new RuntimeException("Tag not found"));
+                        PostTag postTag = PostTag.of(tag, post);
+                        post.addTags(postTag);
+                    });
+        }
 
         postRepository.save(post);
 

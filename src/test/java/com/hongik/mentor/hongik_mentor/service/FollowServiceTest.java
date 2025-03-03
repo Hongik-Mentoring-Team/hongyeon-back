@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.*;
 public class FollowServiceTest {
 
     @Autowired
-    private MemberService memberService;
+    private FollowService followService;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -42,7 +42,7 @@ public class FollowServiceTest {
 
     @Test
     @DisplayName("회원 팔로우에 성공한다.")
-    public void follow_member_success() {
+    void follow_member_success() {
 
         //given
         Member member1 = new Member("1111", SocialProvider.GOOGLE, "박승범", "컴퓨터공학과", 2025);
@@ -58,7 +58,7 @@ public class FollowServiceTest {
                 .build();
 
         //when
-        Long followId = memberService.followMember(request);
+        Long followId = followService.followMember(request);
 
         //then
         assertThat(member1.getFollowers()).hasSize(1);
@@ -87,7 +87,7 @@ public class FollowServiceTest {
         Follow savedFollow = followRepository.save(follow);
 
         //when
-        memberService.unfollowMember(savedFollow.getId());
+        followService.unfollowMember(savedFollow.getId());
 
         //then
         assertThatThrownBy(() -> followRepository.findById(follow.getId())
@@ -98,7 +98,7 @@ public class FollowServiceTest {
 
      @DisplayName("한 사람이 팔로우하고 있는 내역을 모두 조회한다. 즉 팔로잉 내역 조회")
      @Test
-     void test(){
+     void getFollowStatus(){
 
          //given
          Member member1 = new Member("1111", SocialProvider.GOOGLE, "박승범", "컴퓨터공학과", 2025);
@@ -169,6 +169,18 @@ public class FollowServiceTest {
                         tuple(member3.getId(), member1.getId())
                 );
 
+     }
+
+     @DisplayName("")
+     @Test
+     void test(){
+
+         //given
+
+         //when
+
+         //then
+         List<Follow> byFolloweeId = followRepository.findByFolloweeId(1L);
      }
 
     private Follow createFollow(Member follower, Member followee) {

@@ -138,52 +138,6 @@ public class MemberService {
         }
     }
 
-    @Transactional
-    public Long followMember(FollowRequestDTO followRequestDTO){ // followerId : 팔로우를 하려는 회원, followingId : 팔로우를 당하는 회원
-        Member follower = memberRepository.findById(followRequestDTO.getFollowerId()).orElseThrow();
-
-        Member followee = memberRepository.findById(followRequestDTO.getFolloweeId()).orElseThrow();
-
-        Follow follow = Follow.builder()
-                .follower(follower)
-                .followee(followee)
-                .build();
-
-        follower.addFollower(follow);
-
-        followee.addFollowing(follow);
-
-
-        followRepository.save(follow);
-
-        return follow.getId();
-    }
-
-    @Transactional
-    public void unfollowMember(Long followId){
-
-        Follow follow = followRepository.findById(followId)
-                .orElseThrow(() -> new CustomMentorException(ErrorCode.FOLLOW_RELATIONSHIP_DOES_NOT_EXIST));
-
-        followRepository.delete(follow);
-
-//        followRepository.deleteById(followId);
-    }
-
-    public FollowStatusDto getFollowStatus(Long memberId){
-
-        int numOfFollowers = followRepository.countByFollowerId(memberId);
-
-        int numOfFollowings = followRepository.countByFolloweeId(memberId);
-
-
-        return FollowStatusDto.builder()
-                .memberId(memberId)
-                .followers(numOfFollowers)
-                .followings(numOfFollowings)
-                .build();
-
-    }
 
 
 }
