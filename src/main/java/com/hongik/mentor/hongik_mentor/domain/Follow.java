@@ -7,6 +7,13 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@Table(
+//        name = "follow",
+//        indexes = {
+//                @Index(name = "idx_follow_follower", columnList = "follower_id"),
+//                @Index(name = "idx_follow_followee", columnList = "followee_id")
+//        }
+//)
 public class Follow {
 
     @Id @GeneratedValue

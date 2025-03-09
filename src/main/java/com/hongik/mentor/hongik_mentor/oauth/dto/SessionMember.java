@@ -29,6 +29,15 @@ public class SessionMember {
         this.type = member.getType();
     }
 
+    public SessionMember(String socialId, SocialProvider provider, String name, String major, Integer graduationYear, MemberType type) {
+        this.socialId = socialId;
+        this.provider = provider;
+        this.name = name;
+        this.major = major;
+        this.graduationYear = graduationYear;
+        this.type = type;
+    }
+
     public void update(String name, String major, Integer graduationYear) {
         this.name=name;
         this.major=major;
