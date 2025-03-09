@@ -1,16 +1,31 @@
-version: "3.7"
 
 services:
   ### 🔹 Spring Boot 컨테이너
   spring-app:
-    build: .
+    build:
+      context: . # Dockerfile 이 있는 위치
+      dockerfile: Dockerfile
+    image:
+      psb3707/hongik-mentor-spring-app:latest
     container_name: spring-app
     depends_on:
       - logstash
+#      - mysql
     ports:
       - "8080:8080"
     networks:
       - app-network
+#  mysql:
+#    container_name: mysql-db
+#    environment:
+#      MYSQL_ROOT_PASSWORD: psb011031!
+#      MYSQL_DATABASE: mydatabase
+#      MYSQL_USER: myuser
+#      MYSQL_PASSWORD: psb011031!
+#    ports:
+#      - "3308:3306"
+#    networks:
+#      - app-network
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
     container_name: elasticsearch
@@ -46,6 +61,30 @@ services:
       - elasticsearch
     networks:
       - app-network
+  ## nginx
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    networks:
+      - app-network
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 
 networks:

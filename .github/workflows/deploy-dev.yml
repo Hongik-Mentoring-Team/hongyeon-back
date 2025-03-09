@@ -25,10 +25,11 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
 
-      - name: Generate secret yaml file
-        run: |
-          mkdir -p ./src/main/resources/config
-          echo "${{ secrets.MAIN_SECRET_YAML }}" > ./src/main/resources/config/secret.yaml
+      - name: Generate application.yml
+        run: echo "${{secrets.APPLICATION_PROPERTIES}}" > ./src/main/resources/application.yml
+
+      - name: Generate OAuth2 Properties
+        run: echo "${{secrets.APPLICATION_OAUTH_PROPERTIES}}" > ./src/main/resources/application-oauth.properties
 
       - name: Gradle Build
         run: ./gradlew build
@@ -42,16 +43,16 @@ jobs:
 
       - name: Copy docker-compose.yml to EC2
         run: |
-          echo "${{ secrets.MAIN_EC2_PRIVATE_KEY }}" > private_key.pem
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-          scp -i private_key.pem -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.MAIN_SSH_USER }}@${{ secrets.MAIN_SSH_KNOWN_HOSTS }}:/home/ubuntu/
+          scp -i private_key.pem -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/ubuntu/
 
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.MAIN_SSH_KNOWN_HOSTS }}
-          username: ${{secrets.MAIN_SSH_USER}}
-          key: ${{ secrets.MAIN_EC2_PRIVATE_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{secrets.EC2_USERNAME}}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
             sudo docker pull ${{ secrets.SB_DOCKERHUB_USERNAME }}/hongik-mentor-spring-app:latest
             sudo docker compose up -d
