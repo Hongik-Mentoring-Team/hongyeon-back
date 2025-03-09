@@ -139,8 +139,8 @@ class ChatServiceTest {
 
         /*when*/
         String content = "나의 첫 메시지다!";
-        chatService.saveChatMessage(roomId, new ChatMessageReqDto(roomId, content,
-                applicant1.getNickname(), applicant1.getId()), member2.getId());
+        chatService.saveChatMessage(roomId, new ChatMessageReqDto(roomId, applicant1.getNickname(),
+                content, applicant1.getId()), member2.getId());
 
         //then
         List<ChatMessageResponseDto> messages = chatService.findMessages(roomId, member2.getId());
