@@ -1,14 +1,15 @@
 package com.hongik.mentor.hongik_mentor.service;
 
 import com.hongik.mentor.hongik_mentor.controller.dto.FollowRequestDTO;
-import com.hongik.mentor.hongik_mentor.controller.dto.MemberResponseDto;
+import com.hongik.mentor.hongik_mentor.controller.dto.MemberResDto;
+import com.hongik.mentor.hongik_mentor.controller.dto.MemberAdminDto;
 import com.hongik.mentor.hongik_mentor.controller.dto.MemberSaveDto;
 import com.hongik.mentor.hongik_mentor.domain.Follow;
 import com.hongik.mentor.hongik_mentor.domain.Badge;
-import com.hongik.mentor.hongik_mentor.domain.Member;
-import com.hongik.mentor.hongik_mentor.domain.MemberType;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.MemberType;
 
-import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import com.hongik.mentor.hongik_mentor.exception.RegisterMemberException;
 import com.hongik.mentor.hongik_mentor.exception.CustomMentorException;
 import com.hongik.mentor.hongik_mentor.exception.ErrorCode;
@@ -93,20 +94,25 @@ public class MemberService {
     }
 
     //Read
-    public MemberResponseDto findById(Long id) {
+    public MemberResDto findById(Long id) {
         Member findMember = memberRepository.findById(id).orElseThrow();
 
-        return new MemberResponseDto(findMember);
+        return new MemberResDto(findMember);
     }
 
-    public List<MemberResponseDto> findAll() {
+    public List<MemberResDto> findAll() {
 
-        List<MemberResponseDto> collect = memberRepository.findAll()
+        List<MemberResDto> collect = memberRepository.findAll()
                 .stream()
-                .map(MemberResponseDto::new)
+                .map(MemberResDto::new)
                 .collect(Collectors.toList());
 
         return collect;
+    }
+
+    public Long getMemberIdOnllyForAdmin(String socialId, SocialProvider socialProvider) {
+        Long memberid = memberRepository.findBySocialId(socialId, socialProvider).orElseThrow().getId();
+        return memberid;
     }
 
     //Update
@@ -119,67 +125,19 @@ public class MemberService {
 
     //Delete
     @Transactional
-    public void delete(Long id) {
-        memberRepository.delete(id);
+    public void delete(Long memberId) {
+        memberRepository.delete(memberId);
     }
 
-    public Optional<MemberResponseDto> findBySocialId(String socialId, SocialProvider socialProvider) {
+    public Optional<MemberAdminDto> findBySocialId(String socialId, SocialProvider socialProvider) {
         try {
-            MemberResponseDto memberResponseDto = new MemberResponseDto(memberRepository.findBySocialId(socialId,socialProvider).get());
-            return Optional.of(memberResponseDto);
+            MemberAdminDto dto = new MemberAdminDto(memberRepository.findBySocialId(socialId, socialProvider).get());
+            return Optional.of(dto);
         } catch (NoSuchElementException e) {
             return Optional.empty();
         }
     }
 
-    @Transactional
-    public Long followMember(FollowRequestDTO followRequestDTO){ // followerId : 팔로우를 하려는 회원, followingId : 팔로우를 당하는 회원
-        Member follower = memberRepository.findById(followRequestDTO.getFollowerId())
-                .orElseThrow(() -> new CustomMentorException(ErrorCode.MEMBER_NOT_EXISTS));
-
-        Member followee = memberRepository.findById(followRequestDTO.getFolloweeId())
-                .orElseThrow(() -> new CustomMentorException(ErrorCode.MEMBER_NOT_EXISTS));
-
-        Follow follow = Follow.builder()
-                .follower(follower)
-                .following(followee)
-                .build();
-
-        follower.addFollower(follow);
-
-        followee.addFollowing(follow);
-
-
-        followRepository.save(follow);
-
-        return follow.getId();
-    }
-
-    @Transactional
-    public void unfollowMember(Long followId){
-
-        Follow follow = followRepository.findById(followId)
-                .orElseThrow(() -> new CustomMentorException(ErrorCode.FOLLOW_RELATIONSHIP_DOES_NOT_EXIST));
-
-        followRepository.delete(follow);
-
-//        followRepository.deleteById(followId);
-    }
-
-    public FollowStatusDto getFollowStatus(Long memberId){
-
-        int numOfFollowers = followRepository.countByFollowerId(memberId);
-
-        int numOfFollowings = followRepository.countByFollowingId(memberId);
-
-
-        return FollowStatusDto.builder()
-                .memberId(memberId)
-                .followers(numOfFollowers)
-                .followings(numOfFollowings)
-                .build();
-
-    }
 
 
 }

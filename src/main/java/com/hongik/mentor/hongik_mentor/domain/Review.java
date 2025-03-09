@@ -1,5 +1,6 @@
 package com.hongik.mentor.hongik_mentor.domain;
 
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -19,12 +20,12 @@ public class Review {
 
     //리뷰 작성자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer_id", nullable = false)
+    @JoinColumn(name = "writer_id", referencedColumnName = "member_id", nullable = false)
     private Member writer;
 
     //누구에 대한 리뷰인지
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_id", nullable = false)
+    @JoinColumn(name = "target_id", referencedColumnName = "member_id",nullable = false)
     private Member target;
 
     // 평점 (1~5)

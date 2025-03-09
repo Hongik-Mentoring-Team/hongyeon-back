@@ -3,10 +3,12 @@ package com.hongik.mentor.hongik_mentor.service;
 import com.hongik.mentor.hongik_mentor.controller.dto.PostCreateDTO;
 import com.hongik.mentor.hongik_mentor.controller.dto.PostDTO;
 import com.hongik.mentor.hongik_mentor.controller.dto.PostModifyDTO;
-import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.Category;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
+import com.hongik.mentor.hongik_mentor.domain.chat.ChatRoomType;
 import com.hongik.mentor.hongik_mentor.domain.post.Comment;
 import com.hongik.mentor.hongik_mentor.domain.post.Post;
-import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 import com.hongik.mentor.hongik_mentor.exception.CustomMentorException;
 import com.hongik.mentor.hongik_mentor.repository.CommentRepository;
 import com.hongik.mentor.hongik_mentor.repository.MemberRepository;
@@ -48,15 +50,10 @@ class PostServiceTest {
 
         memberRepository.save(member);
 
-        PostCreateDTO request = PostCreateDTO.builder()
-                .title("게시글 1")
-                .content("내용 1")
-                .memberId(member.getId())
-                .tagId(List.of(1L, 2L))
-                .build();
+        PostCreateDTO request = createPostRequest(Category.MENTEE, "제목1", "내용1", List.of(1L, 2L));
 
         //when
-        Long createdPostId = postService.createPost(request);
+        Long createdPostId = postService.createPost(request, member.getId());
 
         //then
         assertThat(createdPostId).isNotNull();
@@ -82,7 +79,7 @@ class PostServiceTest {
         postRepository.save(post);
 
         //when
-        PostDTO postDto = postService.getPost(post.getId());
+        PostDTO postDto = postService.getPost(post.getId(), member.getId());
 
         //then
         assertThat(postDto)
@@ -130,12 +127,12 @@ class PostServiceTest {
 
         //when
         PostDTO postWithComments
-                = postService.getPost(post.getId());
+                = postService.getPost(post.getId(), member.getId());
 
 
         //then
         assertThat(postWithComments.getComments()).hasSize(2)
-                .extracting("content")
+                .extracting("comment")
                 .containsExactly("댓글1", "댓글2");
 
 
@@ -156,12 +153,12 @@ class PostServiceTest {
 
         PostCreateDTO request3 = createPostForTest("게시글 3", "내용 1", member.getId(), List.of(1L, 3L));
 
-        postService.createPost(request1);
-        postService.createPost(request2);
-        postService.createPost(request3);
+        postService.createPost(request1, member.getId());
+        postService.createPost(request2, member.getId());
+        postService.createPost(request3, member.getId());
         
         //when
-        List<PostDTO> postDTOS = postService.searchPostsByTags(List.of(1L));
+        List<PostDTO> postDTOS = postService.searchPostsByTags(null, List.of(1L));
 
         //then
         assertThat(postDTOS).hasSize(2)
@@ -179,8 +176,7 @@ class PostServiceTest {
         return PostCreateDTO.builder()
                 .title(title)
                 .content(content)
-                .memberId(memberId)
-                .tagId(tagIds)
+                .tagIds(tagIds)
                 .build();
     }
 
@@ -202,7 +198,7 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        PostModifyDTO postModifyDTO = new PostModifyDTO("새로운 게시글", "새로운 내용", List.of(2L), 1L);
+        PostModifyDTO postModifyDTO = new PostModifyDTO("새로운 게시글", "새로운 내용", List.of(2L), 8);
 
 
         //when
@@ -259,14 +255,9 @@ class PostServiceTest {
 
         memberRepository.save(member);
 
-        PostCreateDTO request = PostCreateDTO.builder()
-                .title("게시글 1")
-                .content("내용 1")
-                .memberId(member.getId())
-                .tagId(List.of(1L, 2L))
-                .build();
+        PostCreateDTO request = createPostRequest(Category.MENTEE, "제목1", "내용1", List.of(1L, 2L));
 
-        Long createdPostId = postService.createPost(request);
+        Long createdPostId = postService.createPost(request, member.getId());
 
         Post post = postRepository.findById(createdPostId).get();
 
@@ -290,13 +281,79 @@ class PostServiceTest {
         postService.thumbUp(post.getId(), member.getId());
 
         //when
-        postService.deletePost(createdPostId);
+        postService.deletePost(createdPostId, member.getId());
 
         //then
-        assertThatThrownBy(() -> postService.getPost(createdPostId))
+        assertThatThrownBy(() -> postService.getPost(createdPostId, member.getId()))
                 .isInstanceOf(CustomMentorException.class);
 
 
+    }
+
+    @DisplayName("게시글을 태그 리스트와 카테고리로 조회한다. 이때 해당하는 검색조건이 주어지지 않으면 무시한다.")
+    @Test
+    void searchByTagsAndCategory(){
+
+        //given
+
+        Member member = new Member("socialId", SocialProvider.KAKAO, "박승범", "컴퓨터공학과", 2025);
+
+        memberRepository.save(member);
+
+        PostCreateDTO request5 = createPostRequest(Category.MENTEE, "제목1", "내용1", List.of(1L, 2L, 3L));
+        PostCreateDTO request1 = createPostRequest(Category.MENTEE, "제목1", "내용1", List.of(1L, 3L));
+        PostCreateDTO request2 = createPostRequest(Category.MENTEE, "제목1", "내용1", List.of(2L, 3L));
+        PostCreateDTO request3 = createPostRequest(Category.MENTOR, "제목1", "내용1", List.of(4L, 5L));
+        PostCreateDTO request4 = createPostRequest(Category.MENTOR, "제목1", "내용1", List.of(1L));
+
+        postService.createPost(request1, member.getId());
+        postService.createPost(request2, member.getId());
+        postService.createPost(request3, member.getId());
+        postService.createPost(request4, member.getId());
+        postService.createPost(request5, member.getId());
+
+        //when
+        List<Post> searchWithTagsAndCategory = postRepository.searchByTagsAndCategory(List.of(1L), Category.MENTEE);
+        List<Post> searchWithNoTags = postRepository.searchByTagsAndCategory(null, Category.MENTEE);
+        List<Post> searchWithNoCategory = postRepository.searchByTagsAndCategory(List.of(1L, 3L), null);
+
+        //then
+        assertThat(searchWithTagsAndCategory).hasSize(2)
+                .extracting("category")
+                .containsExactlyInAnyOrder(Category.MENTEE, Category.MENTEE);
+        assertThat(searchWithNoTags).hasSize(3)
+                .extracting("category")
+                .containsExactly(Category.MENTEE, Category.MENTEE, Category.MENTEE);
+        assertThat(searchWithNoCategory).hasSize(2);
+        assertThat(searchWithTagsAndCategory).allSatisfy(post ->{
+            List<Long> tagIds = post.getTags().stream()
+                    .map(postTag -> postTag.getTag().getId())
+                    .toList();
+            assertThat(tagIds).containsAll(List.of(1L, 3L));
+        });
+
+
+    }
+
+    private static PostCreateDTO createPostRequest(Category category, String title, String content, List<Long> tagIds) {
+        return PostCreateDTO.builder()
+                .title(title)
+                .content(content)
+                .tagIds(tagIds)
+                .category(category)
+                .chatRoomType(ChatRoomType.PUBLIC)
+                .build();
+    }
+
+    private static Post createPost(Member member, String title, String content) {
+        return Post.builder()
+                .title(title)
+                .content(content)
+                .member(member)
+                .category(Category.MENTEE)
+                .capacity(8)
+                .chatRoomType(ChatRoomType.PUBLIC)
+                .build();
     }
 
 }

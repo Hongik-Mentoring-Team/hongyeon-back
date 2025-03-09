@@ -8,4 +8,9 @@ import lombok.Getter;
 public class CustomMentorException extends RuntimeException {
 
     private ErrorCode errorCode;
+
+    public CustomMentorException(Throwable cause, ErrorCode errorCode) {
+        super(cause);
+        this.errorCode = errorCode;
+    }
 }

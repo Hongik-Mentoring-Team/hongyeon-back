@@ -1,7 +1,7 @@
 package com.hongik.mentor.hongik_mentor.domain.post;
 
 import com.hongik.mentor.hongik_mentor.controller.dto.CommentCreateDto;
-import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

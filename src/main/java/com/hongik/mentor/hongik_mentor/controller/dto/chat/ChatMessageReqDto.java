@@ -1,6 +1,6 @@
 package com.hongik.mentor.hongik_mentor.controller.dto.chat;
 
-import com.hongik.mentor.hongik_mentor.domain.Member;
+import com.hongik.mentor.hongik_mentor.domain.member.Member;
 import com.hongik.mentor.hongik_mentor.domain.chat.ChatMessage;
 import lombok.Data;
 
@@ -8,19 +8,20 @@ import java.time.LocalDateTime;
 //!리팩토링
 // ChatMessageResponseDto와 내용이 똑같이 변해버림. 나중에 리팩토링 필요
 @Data
-public class ChatMessageDto {
+public class ChatMessageReqDto {
     private Long chatRoomId;
     private String nickname;
-    private Long memberId;
+    private Long chatRoomMemberId;
+//    private Long memberId;
     private String content;
     private LocalDateTime createdAt;
 
-    public ChatMessageDto(Long chatRoomId, String nickname, Long memberId, String content) {
+    public ChatMessageReqDto(Long chatRoomId, String nickname, String content, Long chatRoomMemberId) {
         this.chatRoomId = chatRoomId;
         this.nickname = nickname;
-        this.memberId = memberId;
         this.content = content;
         this.createdAt = LocalDateTime.now();
+        this.chatRoomMemberId = chatRoomMemberId;
     }
 
     public ChatMessage toEntity(Member sender) {

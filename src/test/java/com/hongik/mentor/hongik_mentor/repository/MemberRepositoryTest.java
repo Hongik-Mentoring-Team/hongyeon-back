@@ -1,9 +1,9 @@
 //package com.hongik.mentor.hongik_mentor.repository;
 //
-//import com.hongik.mentor.hongik_mentor.domain.AccountStatus;
-//import com.hongik.mentor.hongik_mentor.domain.Member;
-//import com.hongik.mentor.hongik_mentor.domain.MemberType;
-//import com.hongik.mentor.hongik_mentor.domain.SocialProvider;
+//import com.hongik.mentor.hongik_mentor.domain.member.AccountStatus;
+//import com.hongik.mentor.hongik_mentor.domain.member.Member;
+//import com.hongik.mentor.hongik_mentor.domain.member.MemberType;
+//import com.hongik.mentor.hongik_mentor.domain.member.SocialProvider;
 //import org.assertj.core.api.Assertions;
 //import org.junit.jupiter.api.AfterEach;
 //import org.junit.jupiter.api.BeforeEach;

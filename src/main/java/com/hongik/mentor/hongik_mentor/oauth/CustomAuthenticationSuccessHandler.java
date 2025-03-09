@@ -27,12 +27,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_TEMP"))) {
             log.info("신규 유저 리다이렉트");
-            response.sendRedirect(ConstantUri.FRONT_HOME_URL +"/createMember");
+            response.sendRedirect(ConstantUri.FRONT_HOME_URL +"/login/createMember");
         }
         //기존유저 리다이렉트
         else {
             log.info("기존 유저 리다이렉트");
-            response.sendRedirect(ConstantUri.FRONT_HOME_URL+"/newHome");
+            response.sendRedirect(ConstantUri.FRONT_HOME_URL+"/login/afterlogin");
         }
     }
 }
