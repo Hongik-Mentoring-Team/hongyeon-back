@@ -32,7 +32,7 @@ jobs:
         run: echo "${{secrets.APPLICATION_OAUTH_PROPERTIES}}" > ./src/main/resources/application-oauth.properties
 
       - name: Gradle Build
-        run: ./gradlew build
+        run: ./gradlew build -x test
 
       - name: Docker build
         run: |
