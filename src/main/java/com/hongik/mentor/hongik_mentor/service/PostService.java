@@ -249,4 +249,25 @@ public class PostService {
     private static boolean isEntityOwner(Long requesterId, Long entityOwnerId) {
         return requesterId.equals(entityOwnerId);
     }
+
+    public List<PostDTO> searchByTitle(String keyword) {
+        return postRepository.searchByTitle(keyword)
+                .stream()
+                .map(PostDTO::fromPost)
+                .toList();
+    }
+
+    public List<PostDTO> searchByContent(String keyword) {
+        return postRepository.searchByContent(keyword)
+                .stream()
+                .map(PostDTO::fromPost)
+                .toList();
+    }
+
+    public List<PostDTO> searchByMember(String keyword) {
+        return postRepository.searchByMember(keyword)
+                .stream()
+                .map(PostDTO::fromPost)
+                .toList();
+    }
 }

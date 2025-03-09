@@ -1,4 +1,4 @@
-package com.hongik.mentor.hongik_mentor.controller;
+package com.hongik.mentor.hongik_mentor.controller.post;
 
 import com.hongik.mentor.hongik_mentor.controller.dto.PostCreateDTO;
 import com.hongik.mentor.hongik_mentor.controller.dto.PostDTO;
@@ -121,6 +121,21 @@ public class PostController implements PostControllerDocs {
         postService.applyToPost(postId,applicantId, nickname);
 
         return ResponseEntity.ok().body("지원에 성공했습니다!");
+    }
+
+    @GetMapping("/search/title")
+    public ResponseEntity<?> searchByTitle(@RequestParam String keyword) {
+        return ResponseEntity.ok(postService.searchByTitle(keyword));
+    }
+
+    @GetMapping("/search/content")
+    public ResponseEntity<?> searchByContent(@RequestParam String keyword) {
+        return ResponseEntity.ok(postService.searchByContent(keyword));
+    }
+
+    @GetMapping("/search/poster")
+    public ResponseEntity<?> searchByPoster(@RequestParam String keyword) {
+        return ResponseEntity.ok(postService.searchByMember(keyword));
     }
 
 }

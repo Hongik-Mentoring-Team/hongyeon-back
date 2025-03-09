@@ -8,6 +8,8 @@ import com.hongik.mentor.hongik_mentor.domain.post.QTag;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +17,11 @@ import java.util.Optional;
 public class PostSearchRepositoryImpl implements PostSearchRepository{
 
     private final JPAQueryFactory queryFactory;
+    private final EntityManager em;
 
     public PostSearchRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+        this.em = em;
     }
 
     public Optional<Post> getPostById(Long id) {
@@ -81,6 +85,27 @@ public class PostSearchRepositoryImpl implements PostSearchRepository{
                 .selectFrom(p)
                 .where(p.category.eq(category))
                 .fetch();
+    }
+
+    @Override
+    public List<Post> searchByTitle(String keyword) {
+        return em.createQuery("select p from Post p where p.title like concat('%', :keyword, '%')", Post.class)
+                .setParameter("keyword", keyword)
+                .getResultList();
+    }
+
+    @Override
+    public List<Post> searchByContent(String keyword) {
+        return em.createQuery("select p from Post p where p.content like concat('%', :keyword, '%')", Post.class)
+                .setParameter("keyword", keyword)
+                .getResultList();
+    }
+
+    @Override
+    public List<Post> searchByMember(String keyword) {
+        return em.createQuery("select p from Post p join p.member m where m.name like concat('%', :keyword, '%')", Post.class)
+                .setParameter("keyword", keyword)
+                .getResultList();
     }
 
 }

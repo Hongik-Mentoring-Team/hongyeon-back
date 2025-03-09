@@ -12,4 +12,8 @@ public interface PostSearchRepository {
     List<Post> searchByTagsAndCategory(List<Long> tagIds, Category category);
     List<Post> searchByCategory(Category category);
     Optional<Post> getPostById(Long id);
+
+    List<Post> searchByTitle(String keyword);
+    List<Post> searchByContent(String keyword);
+    List<Post> searchByMember(String keyword);
 }
